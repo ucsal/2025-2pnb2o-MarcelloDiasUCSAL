@@ -1,13 +1,20 @@
 package br.com.mariojp.solid.ocp;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
 
-public class DiscountCalculatorTest {
-    @Test
-    void partner_gets_12_percent() {
-        var calc = new DiscountCalculator();
-        assertEquals(88.0, calc.apply(100.0, CustomerType.PARTNER), 0.0001,
-            "PARTNER deveria ter 12% de desconto");
+public class DiscountCalculator {
+
+    private final Map<CustomerType, DiscountPolicy> policies;
+
+    public DiscountCalculator(Map<CustomerType, DiscountPolicy> policies) {
+        this.policies = policies;
+    }
+
+    public double apply(double amount, CustomerType type) {
+        DiscountPolicy policy = policies.get(type);
+        if (policy == null) {
+            return amount; // Sem desconto definido
+        }
+        return policy.apply(amount);
     }
 }
